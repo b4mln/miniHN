@@ -1,0 +1,24 @@
+{
+  "name": "minihackernews",
+  "version": "0.0.7",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "body-parser": "~1.17.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.3",
+    "express": "~4.15.2",
+    "morgan": "~1.8.1",
+    "passport": "0.3.2",
+    "passport-hash": "0.6.0",
+    "passport-http-bearer": "^1.0.1",
+    "passport-local": "1.0.0",
+    "pg": "6.4.0",
+    "randomstring": "1.1.5",
+    "sequelize": "4.2.1",
+    "sha1": "1.1.1",
+    "swagger-jsdoc": "^1.3.0"
+  }
+}

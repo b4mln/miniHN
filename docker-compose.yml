@@ -1,0 +1,10 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+     - "3000:3000"
+  storage:
+    build: ./storage
+    ports:
+     - "5432:5432"
