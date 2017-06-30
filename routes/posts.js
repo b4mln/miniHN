@@ -1,7 +1,51 @@
 const express  = require('express'),
       router   = express.Router(),
+      Score    = require("../models/score"),
       Post     = require("../models/post"),
       passport = require("passport");
+
+const PAGE_SIZE_MAX     = 100;
+const PAGE_SIZE_DEFAULT = 10;
+
+/**
+ * @swagger
+ * /post:
+ *  get:
+ *      tags:
+ *       - Posts
+ *      summary: Get a sorted Posts view
+ *      produces:
+ *       - application/json
+ *      responses:
+ *        200:
+ *          description: The posts
+ *      consumes:
+ *        - application/json
+ *      parameters:
+ *        - name: limit
+ *          required: false
+ *          in: query
+ *          type: integer
+ *        - name: offset
+ *          required: false
+ *          in: query
+ *          type: integer
+ */
+router.get('/', function(req, res, next) {
+    const limit  = Math.min(PAGE_SIZE_MAX, req.query.limit || PAGE_SIZE_DEFAULT);
+    const offset = req.query.offset || 0;
+
+    Score.findAll({
+        offset,
+        limit,
+        order: [
+            ['adjusted', 'DESC'],
+        ]
+    }).then(posts =>
+        res.json(posts.map(post => post.dataValues))
+    )
+});
+
 
 /**
  * @swagger
