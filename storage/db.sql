@@ -18,3 +18,12 @@ CREATE TABLE "Posts" (
     created    timestamp DEFAULT now(),
     updated    timestamp DEFAULT now()
 );
+
+CREATE TABLE "Votes" (
+    userid    integer NOT NULL,
+    postid    integer NOT NULL,
+    "value"   integer NOT NULL CHECK ("value" >= -1 AND "value" <= 1),
+    created   timestamp DEFAULT now(),
+
+    PRIMARY KEY(userid, postid)
+);
