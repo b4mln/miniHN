@@ -10,3 +10,11 @@ CREATE TABLE "Users" (
 
 CREATE INDEX User_credentials_idx ON "Users" (username, password);
 CREATE INDEX User_token_idx ON "Users" (token);
+
+CREATE TABLE "Posts" (
+    id         SERIAL PRIMARY KEY,
+    userid     integer NOT NULL,
+    content    text,
+    created    timestamp DEFAULT now(),
+    updated    timestamp DEFAULT now()
+);
