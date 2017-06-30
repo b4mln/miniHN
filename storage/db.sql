@@ -27,3 +27,13 @@ CREATE TABLE "Votes" (
 
     PRIMARY KEY(userid, postid)
 );
+
+CREATE VIEW "Scores" AS
+    SELECT p.id, p.created, v.score, v.score / ((EXTRACT(EPOCH FROM (NOW() - created))/(60*60) + 2)^(1.8)) AS adjusted
+    FROM "Posts" p
+    INNER JOIN (
+        SELECT postid, SUM("value") AS score
+        FROM "Votes"
+        GROUP BY postid
+    ) v
+    ON p.id = v.postid
