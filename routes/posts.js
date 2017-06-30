@@ -42,4 +42,58 @@ router.post('/', passport.authenticate('bearer', { session: false }), function(r
     )
 });
 
+/**
+ * @swagger
+ * /post/{id}:
+ *  post:
+ *      tags:
+ *       - Posts
+ *      summary: Update an existing post
+ *      produces:
+ *       - application/json
+ *      responses:
+ *        200:
+ *          description: The updated post
+ *      consumes:
+ *        - application/json
+ *      parameters:
+ *        - name: access_token
+ *          required: true
+ *          in: query
+ *          type: string
+ *        - name: body
+ *          description: The Post text
+ *          in: body
+ *          required: true
+ *          schema:
+ *              properties:
+ *                  content:
+ *                    type: string
+ *        - name: id
+ *          description: The Identifier of the post to update
+ *          in: path
+ *          required: true
+ *          type: integer
+ */
+router.post('/:post_id',  passport.authenticate('bearer', { session: false }), function(req, res, next) {
+    Post.findById(req.params.post_id)
+        .then(post => {
+            if (post.dataValues.userid !== req.user.dataValues.userid) {
+                throw new Error("Unautherized");
+            }
+
+            return post.update({
+                content: req.body.content,
+                updated: Date.now()
+            });
+        })
+        .then(post =>
+            res.json(post)
+        )
+        .catch(err => {
+            res.status(400);
+            res.json({ message: err.message });
+        });
+});
+
 module.exports = router;
