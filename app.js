@@ -10,7 +10,8 @@ const express      = require('express'),
 const config = require("./config");
 
 const base  = require("./routes/base"),
-      users = require('./routes/users');
+      users = require('./routes/users'),
+      posts = require('./routes/posts');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/base', base);
 app.use('/user', users);
+app.use('/post', posts);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
