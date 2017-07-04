@@ -3,8 +3,9 @@ const express      = require('express'),
       logger       = require('morgan'),
       http         = require("http"),
       passport     = require("passport"),
-      authInit     = require("./auth");
+      authInit     = require("./auth"),
       bodyParser   = require('body-parser'),
+      queue        = require('./queue'),
       randomstring = require("randomstring");
 
 const config = require("./config");
@@ -41,6 +42,14 @@ app.use(function(err, req, res, next) {
   res.status(500);
   res.json({ message: "Operation failed" })
 });
+
+app.use(function(req, res, next) {
+    queue(config.queue.exchangeName).then(exchange => {
+      req.quque = exchange;
+      next();
+    });
+});
+
 
 // Running the server
 app.server = http.createServer(app);

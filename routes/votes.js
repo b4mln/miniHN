@@ -33,6 +33,9 @@ router.put('/:post_id', passport.authenticate('bearer', { session: false }), fun
     _upsertVote(req.params.post_id, req.user.dataValues.id)
         .then(vote => vote.increment('value', {by: 1}))
         .then(vote => res.json(vote.dataValues))
+        .then(vote => req.quque
+                            ? req.quque.publish("upvoted", JSON.stringify(vote.dataValues))
+                            : null)
         .catch(err => {
             res.status(500);
             res.json({ message: "Could not complete operation" })
@@ -86,8 +89,8 @@ function _upsertVote(postId, userId) {
         .then(vote => vote
             ? vote
             : Vote.create({
-                userid: postId,
-                postid: userId,
+                userid: userId,
+                postid: postId,
                 value: 0
             })
         )

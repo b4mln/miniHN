@@ -2,6 +2,7 @@ const express  = require('express'),
       router   = express.Router(),
       Score    = require("../models/score"),
       Post     = require("../models/post"),
+      Follower = require("../models/followwr"),
       passport = require("passport");
 
 const PAGE_SIZE_MAX     = 100;
@@ -43,6 +44,42 @@ router.get('/', function(req, res, next) {
         ]
     }).then(posts =>
         res.json(posts.map(post => post.dataValues))
+    )
+});
+
+
+/**
+ * @swagger
+ * /follow/{id}:
+ *  post:
+ *      tags:
+ *       - Posts
+ *      summary: Follow a post
+ *      produces:
+ *       - application/json
+ *      responses:
+ *        200:
+ *          description: The created follow object
+ *      consumes:
+ *        - application/json
+ *      parameters:
+ *        - name: access_token
+ *          required: true
+ *          in: query
+ *          type: string
+ *        - name: id
+ *          description: The Post ID to follow
+ *          in: query
+ *          required: true
+ */
+router.post('/follow/:post_id', passport.authenticate('bearer', { session: false }), function(req, res, next) {
+    Follower.create({
+        userid:   req.user.dataValues.id,
+        postid:  req.params.post_id,
+        created:  Date.now(),
+        updated:  Date.now()
+    }).then(follower =>
+        res.json(follower.dataValues)
     )
 });
 
